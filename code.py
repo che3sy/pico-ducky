@@ -48,24 +48,21 @@ elif(board.board_id == 'raspberry_pi_pico_w' or board.board_id == 'raspberry_pi_
     led.switch_to_output()
 
 async def run_payload_on_startup():
-    payload = selectPayload()
-    print("Running ")
-    await asyncio.sleep(0.1)
-    if "loot.bin" in os.listdir("/"):
-        print("loot.bin exists, skipping payload execution.")
+    progStatus = False
+    progStatus = getProgrammingStatus()
+    print("progStatus", progStatus)
+    if(progStatus == False):
+        print("Finding payload")
+        if "loot.bin" in os.listdir("/"):
+            print("loot.bin exists, skipping payload execution.")
+        else:
+            payload = selectPayload()
+            await asyncio.sleep(0.1)
+            print("Running")
+            awaitrunScript(payload)
     else:
-        await runScript(payload)
-    print("Done")
+        print("Done")
 
-
-progStatus = False
-progStatus = getProgrammingStatus()
-print("progStatus", progStatus)
-if(progStatus == False):
-    print("Finding payload")
-
-else:
-    print("Update your payload")
 
 led_state = False
 
